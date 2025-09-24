@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: reggie_out
+  main:
+    allow-bean-definition-overriding: true
+  shardingsphere:
+    datasource:
+      names: master,slave
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.72.100:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        username: xiaohuang
+        password: LYact.758516344
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.72.101:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: LYact.758516344
+    masterslave:
+      load-balance-algorithm-type: round_robin
+      name: dataSource
+      master-data-source-name: master
+      slave-data-source-names: slave
+    props:
+      sql:
+        show: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  redis:
+    host: 192.168.72.100
+    port: 6379
+    password: act758516344
+    database: 0
+  cache:
+    redis:
+      time-to-live: 1800000
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+  # 确保能扫描到Mapper接口和XML文件
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: org.project.reggie.entity
+  # 添加这一行，确保能扫描到Mapper接口
+  type-enums-package: org.project.reggie.mapper
+
+takeOutFile:
+  fileLocaltion: /usr/local/img/
